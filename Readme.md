@@ -22,6 +22,7 @@ getprocaddress:
     mov eax, 0x1505         ; eax = 0x1505 (hash seed)
     mov r9d, [r10 + rdi * 4]; r9d = Function Name RVA
     add r9, rcx             ; r9 = Function Name
+    xor rsi, rsi            ; rsi = 0
 .djb2_hash:
     mov sil, [r9]           ; sil = &TargetFunc[i]
     cmp sil, 0              ; check for null terminator. hash complete if true
