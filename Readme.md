@@ -10,6 +10,8 @@ In my previous write ups about this x64 assembly binge i've been on, i was perfo
 # Demonstration
 To demonstrate the functions ability to repeatedly locate functions which can be dynamically called by our shellcode, i've used it to create a shellcode which uses the function to load user32.dll into the target process via LoadLibrary, then it parses user32.dll for MessageBoxA and pops a message box. Finally, it terminates its own thread to cleanly kill the shellcode without terminating the host process early. This demonstrates its ability to load a new module into the process and then parse the new module for another function to call, using the same function while remaining position independent.
 
+![demo](/img/demo.gif)
+
 # The code
 Instead of using strings, this function uses a hash of the function name which is compared to a live hash of the function name taken when its parsed from the target modules export address table.
 
