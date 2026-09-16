@@ -1,3 +1,18 @@
+# About
+In my previous write ups about this x64 assembly binge i've been on, i was performing a pebwalk which is essentially doing the job of GetProcAddress one time. Using the knowledge i've gained from those write ups, i've created a GetProcAddress function which allows us to re-use the functionality within the same shellcode blob wile remaining position independent. This will enable us to locate and call multiple functions within the same shellcode blob. Up until now, we have only been calling one function, **WinExec**. This provides a re-usable function for multiple making multiple calls, extending our capabilities.
+
+## Previous write ups
+1. [Coding-my-first-position-independent-shellcode-for-windows-from-scratch-in-x64-assembly](https://github.com/wizardy0ga/coding-my-first-position-independent-shellcode-for-windows-from-scratch-in-x64-assembly)
+2. [Improving-my-x64-PIC-shellcode-windows-peb-walk](https://github.com/wizardy0ga/improving-my-x64-PIC-shellcode-windows-peb-walk)
+3. [djb2-hash-x64-assembly](https://github.com/wizardy0ga/djb2-hash-x64-assembly)
+4. [Improving-my-x64-PIC-shellcode-windows-peb-walk-part-2](https://github.com/wizardy0ga/improving-my-x64-PIC-shellcode-windows-peb-walk-part-2)
+
+# Demonstration
+To demonstrate the functions ability to repeatedly locate functions which can be dynamically called by our shellcode, i've used it to create a shellcode which uses the function to load user32.dll into the target process via LoadLibrary, then it parses user32.dll for MessageBoxA and pops a message box. Finally, it terminates its own thread to cleanly kill the shellcode without terminating the host process early. This demonstrates its ability to load a new module into the process and then parse the new module for another function to call, using the same function while remaining position independent.
+
+# The code
+Instead of using strings, this function uses a hash of the function name which is compared to a live hash of the function name taken when its parsed from the target modules export address table.
+
 ```asm
 ; __stdcall* GetProcAddress(HMODULE hModule, DWORD Hash)
 ;                           rcx   = hModule, rdx=Hash
